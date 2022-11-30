@@ -1,0 +1,194 @@
+
+
+https://freez-api.herokuapp.com/auth/register
+
+body :  {
+    "name":"deena", 
+    "email":"falconthayNa1@gmail.com",
+    "password":"1234567",
+     "aadhar":"43537635353768",
+    "phone":"99535353535",
+     "pan":"LN85hWRG3535",
+     "professionalDetails":"unknown"
+    } 
+
+    response :{
+        {
+            "_id": "6292b4b8087c89e07d001759",
+            "name": "deena",
+            "email": "falconthaya1@gmail.com",
+            "otp": 548334,
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTJiNGI4MDg3Yzg5ZTA3ZDAwMTc1OSIsImlhdCI6MTY1Mzc4MTY4OCwiZXhwIjoxNjU2MzczNjg4fQ.LabUYiHyftlehZxaJKo8seJPk_fr1ujupuedf1Zm9vA"
+        }
+    }
+
+    // ------------------------------------------
+
+    https://freez-api.herokuapp.com/auth/verify
+
+    body :  {
+    "email":"falconthaya@gmail.com",
+    "otp":548334
+      } 
+
+   response : {
+            "success":"user Registerd"
+            }
+
+   // ------------------------------------------
+
+    https://freez-api.herokuapp.com/auth/login
+
+    body :  {
+
+        "email":"falconthaya@gmail.com",
+        "password":"newpassword"
+    
+        } 
+
+     response : {
+            "_id": "6292b2d5515ee734d6ead139",
+            "username": "deena",
+            "email": "falconthaya@gmail.com",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTJiMmQ1NTE1ZWU3MzRkNmVhZDEzOSIsImlhdCI6MTY1Mzc4ODkyOCwiZXhwIjoxNjU2MzgwOTI4fQ.ogPq3Qfji9wUzsW97DTQkjYLWXSHkjykF6q1SJfmYgQ"
+        }
+
+        // ------------------------------------------
+
+
+        https://freez-api.herokuapp.com/auth/getotp
+
+
+
+     body : {
+            "email":"falconthaya@gmail.com"
+
+            } 
+
+   response : {
+            "success": "OTP send your mail id"
+            }
+
+
+           // ------------------------------------------
+
+        https://freez-api.herokuapp.com/auth/chngpwd
+
+    body :   {
+            "email":"falconthaya@gmail.com",
+            "otp":171734,
+            "password":"newpassword"
+            } 
+ response :  {
+            "success": "Password Channged"
+        }
+
+
+
+     // ------------------------------------------
+
+        https://freez-api.herokuapp.com/get/prof_details
+
+
+
+   response :   {
+
+    "GRN Innovation": [
+        "industrial",
+        "government",
+        "domestic",
+        "distributers",
+        "dealers",
+        "Technician",
+        "technician",
+        "B.partner"
+    ],
+    "Rite Foundation": [
+        "advisor",
+        "admin",
+        "institution",
+        "trust",
+        "association",
+        "students",
+        "public",
+        "job seakers"
+    ]
+}
+
+
+     // ------------------------------------------
+
+
+     https://freez-api.herokuapp.com/get/role
+
+
+     
+   response : {
+    "professionalDetails": {
+        "GRN Innovation": {
+            "industrial": 0,
+            "government": 3,
+            "domestic": 0,
+            "distributers": 0,
+            "dealers": 1,
+            "Technician": 0,
+            "technician": 0,
+            "B.partner": 0
+        },
+        "Rite Foundation": {
+            "advisor": 0,
+            "admin": 2,
+            "institution": 0,
+            "trust": 0,
+            "association": 0,
+            "students": 0,
+            "public": 0,
+            "job seakers": 0
+        }
+    }
+}
+
+
+ // ------------------------------------------
+
+https://freez-api.herokuapp.com/get/personal_details
+
+ body :    {
+    "email":"falconthaya@gmail.com"
+
+    } 
+
+response : {
+{
+    "name": "deena",
+    "email": "falconthaya@gmail.com",
+    "phone": "99535353535",
+    "aadhar": "43537635353768",
+    "pan": "LN85hWRG3535",
+    "professionalDetails": "government",
+    "gender": "male",
+    "DOB": "24/12/2022",
+    "location": "chennai",
+    "age": 24,
+    "address": "random"
+}
+}
+
+
+ // ------------------------------------------
+
+ https://freez-api.herokuapp.com/auth/updateUser
+
+body :    {
+    "email":"falconthaya@gmail.com",
+    "gender":"male",
+    "DOB":"24/12/2022",
+    "location":"chennai",
+    "age":24,
+    "address":"random"
+    } 
+
+
+response :  {
+    "success": "Update User"
+}
