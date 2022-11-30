@@ -8,7 +8,7 @@ const EmployeeSchema = new mongoose.Schema({
     type: String,
   },
   Employee_Id: {
-    type: Number,
+    type: String,
   },
   counselling_Country: {
     type: String,
