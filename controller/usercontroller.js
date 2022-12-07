@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 // import UserReg from "../model/userreg";
 
 class Admininfo {
-  async Registeruser(req, res) {
+  async Register(req, res) {
     const {
       First_Name,
       Last_Name,
@@ -25,10 +25,9 @@ class Admininfo {
       Study_level,
       Status,
     } = req.body;
-
     const user = await UserReg.findOne({ Email_id });
     if (user) {
-      return res.status(200).send({
+      return res.status(400).send({
         message: "user email already registered",
       });
     } else {
@@ -300,7 +299,16 @@ class Admininfo {
       return res.status(400).send(error.message);
     }
   }
-
+  async ViewallRegisterUsers(req, res) {
+    try {
+      const Data = await UserReg.find();
+      return res.status(200).send({
+        Data: Data,
+      });
+    } catch (error) {
+      return res.status(400).send(error.message);
+    }
+  }
   // async registerUser(req, res) {
   //   const { firstname, phoneno, passwd } = req.body;
 
