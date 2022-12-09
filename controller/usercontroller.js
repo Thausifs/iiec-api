@@ -73,7 +73,7 @@ class Admininfo {
         Data: Data,
       });
     } catch (error) {
-      //  console.log(error);
+      
       return res.status(400).send(error.message);
     }
   }
@@ -118,7 +118,7 @@ class Admininfo {
       Employee_Id,
       counselling_Country,
       Address,
-      Attendance,
+      Password,
     } = req.body;
     try {
       const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
@@ -133,7 +133,8 @@ class Admininfo {
           Employee_Id,
           counselling_Country,
           Address,
-          Attendance,
+          Password,
+          Type: "admin",
         });
         return res.status(201).json({
           message: "Employee created succesfully",
@@ -153,7 +154,7 @@ class Admininfo {
       Employee_Id,
       counselling_Country,
       Address,
-      Attendance,
+      Password,
     } = req.body;
     const Employee = await Employees.findOne({ Employee_Id });
     try {
@@ -162,7 +163,7 @@ class Admininfo {
         Employee.DOJ = DOJ;
         Employee.counselling_Country = counselling_Country;
         Employee.Address = Address;
-        Employee.Attendance = Attendance;
+        Employee.Password = Password;
         await Employee.save();
         return res.status(200).send({
           message: "Employee Updated",
@@ -265,7 +266,7 @@ class Admininfo {
 
     try {
       const Student = await Students.findOne({ Student_Id: Student_Id });
-      console.log(Student);
+  
       if (Student) {
         await Students.deleteOne({ Student_Id: Student_Id });
         return res.status(200).send({
@@ -285,7 +286,7 @@ class Admininfo {
 
     try {
       const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
-      console.log(Employee);
+  
       if (Employee) {
         await Employees.deleteOne({ Employee_Id: Employee_Id });
         return res.status(200).send({
@@ -309,6 +310,34 @@ class Admininfo {
       return res.status(400).send(error.message);
     }
   }
+
+  async EmployeeLogin(req, res) {
+    const { Employee_Id, Password } = req.body;
+  
+    try {
+      const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
+      
+      if (Employee) {
+        if (Employee.Password === Password) {
+          return res.status(200).send({
+            message: "Employee login sucessful",
+            Data: Employee.Type,
+          });
+        } else {
+          return res.status(201).send({
+            message: "Authentication failed , Password didn't match",
+          });
+        }
+      } else {
+        return res.status(401).send({
+          message: "Employee not found",
+        });
+      }
+    } catch (error) {
+      return res.status(400).send(error.message);
+    }
+  }
+
   // async registerUser(req, res) {
   //   const { firstname, phoneno, passwd } = req.body;
 

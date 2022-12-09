@@ -18,6 +18,9 @@ router.get("/viewallstudents", Admininfo.viewallstudents);
 router.post("/deletestudent", Admininfo.DeleteStudent);
 router.post("/deleteemployee", Admininfo.DeleteEmployee);
 router.get("/viewallreguser", Admininfo.ViewallRegisterUsers);
+router.post("/employeelogin", Admininfo.EmployeeLogin);
+// router.post("/uploadImages", Admininfo.uploadImages);
  
+
 
 export default router;

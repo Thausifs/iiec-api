@@ -16,7 +16,10 @@ const EmployeeSchema = new mongoose.Schema({
   Address: {
     type: String,
   },
-  Attendance: {
+  Password: {
+    type: String,
+  },
+  Type: {
     type: String,
   },
 });
