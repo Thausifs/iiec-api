@@ -22,6 +22,9 @@ const StudentsSchema = new mongoose.Schema({
   Courses: {
     type: String,
   },
+  DOJ: {
+    type: String
+  }
 });
 const Students = mongoose.model("Students", StudentsSchema);
 export default Students;

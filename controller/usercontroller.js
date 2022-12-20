@@ -8,7 +8,10 @@ import {
 } from "../model";
 // import bcrypt from "bcrypt";
 import mongoose from "mongoose";
+import CloudinaryUploadImg from "../utils/cloudinary";
 // import UserReg from "../model/userreg";
+
+
 
 class Admininfo {
   async Register(req, res) {
@@ -73,7 +76,6 @@ class Admininfo {
         Data: Data,
       });
     } catch (error) {
-      
       return res.status(400).send(error.message);
     }
   }
@@ -87,6 +89,13 @@ class Admininfo {
   async Createuniversity(req, res) {
     const { Name, Country, Territories } = req.body;
     try {
+      const univ = await University.findOne({ Name: Name, Country: Country });
+      if (univ) {
+        return res.status(400).send({
+          message: "University with same country and name is already stored. ",
+        });
+      } else {
+      }
       const Data = await University.create({
         Name,
         Country,
@@ -266,7 +275,7 @@ class Admininfo {
 
     try {
       const Student = await Students.findOne({ Student_Id: Student_Id });
-  
+
       if (Student) {
         await Students.deleteOne({ Student_Id: Student_Id });
         return res.status(200).send({
@@ -286,7 +295,7 @@ class Admininfo {
 
     try {
       const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
-  
+
       if (Employee) {
         await Employees.deleteOne({ Employee_Id: Employee_Id });
         return res.status(200).send({
@@ -313,10 +322,10 @@ class Admininfo {
 
   async EmployeeLogin(req, res) {
     const { Employee_Id, Password } = req.body;
-  
+
     try {
       const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
-      
+
       if (Employee) {
         if (Employee.Password === Password) {
           return res.status(200).send({
@@ -337,6 +346,35 @@ class Admininfo {
       return res.status(400).send(error.message);
     }
   }
+  async ApplicationCompleted(req, res) {
+    try {
+      const Data = await Students.find({ Status: "Joining Date Finalised" });
+      return res.status(200).send({
+        Data: Data,
+      });
+    } catch (error) {
+      return res.status(400).send(error.message);
+    }
+  }
+
+  async Addimage(req, res) {
+    console.log(req);
+    const image = req; 
+  console.log(image);
+  const imgUploaded = await CloudinaryUploadImg(image);
+  console.log(imgUploaded);
+  try {
+   
+    return res.status(201).json();
+    console.log(imgUploaded);
+    
+   
+
+    
+  } catch (error) {
+    res.status(500).json("Data not Added");
+  }
+ };
 
   // async registerUser(req, res) {
   //   const { firstname, phoneno, passwd } = req.body;
