@@ -8,10 +8,10 @@ import {
 } from "../model";
 // import bcrypt from "bcrypt";
 import mongoose from "mongoose";
-import CloudinaryUploadImg from "../utils/cloudinary";
+import path from "path";
+import { CloudinaryUploadImg } from "../utils/cloudinary";
+import fs from "fs";
 // import UserReg from "../model/userreg";
-
-
 
 class Admininfo {
   async Register(req, res) {
@@ -125,10 +125,12 @@ class Admininfo {
       Employee_Name,
       DOJ,
       Employee_Id,
-      counselling_Country,
+      Counselling_Country,
       Address,
       Password,
     } = req.body;
+    const image = req.file.path;
+    const imgUploaded = await CloudinaryUploadImg(image);
     try {
       const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
       if (Employee) {
@@ -140,10 +142,11 @@ class Admininfo {
           Employee_Name,
           DOJ,
           Employee_Id,
-          counselling_Country,
+          Counselling_Country,
           Address,
           Password,
           Type: "admin",
+          Image: imgUploaded,
         });
         return res.status(201).json({
           message: "Employee created succesfully",
@@ -197,24 +200,44 @@ class Admininfo {
       Courses,
       Status,
     } = req.body;
+    // console.log(req.body);
+
+    const image = req.file.path;
+    const imgUploaded = await CloudinaryUploadImg(image);
+    console.log(imgUploaded);
     try {
-      const Data = await Students.create({
-        Students_Name,
-        DOE,
-        Student_Id,
-        Counselling_Country,
-        Counsellor,
-        Courses,
-        Status,
-      });
-      return res.status(200).send({
-        message: "Student created succesfully",
-        Data: Data,
-      });
+      if (imgUploaded.http_code === 401) {
+        return res.status(401).json({
+          message: "Error while uploading the images",
+        });
+      }
+      const student = await Students.findOne({ Student_Id: Student_Id });
+      if (student) {
+        return res.status(503).json({
+          message: "Student already found with same student id ",
+        });
+      } else {
+        const Data = await Students.create({
+          Students_Name,
+          DOE,
+          Student_Id,
+          Counselling_Country,
+          Counsellor,
+          Courses,
+          Status,
+          Image: imgUploaded,
+        });
+        fs.unlinkSync(`${image}`);
+        return res.status(200).send({
+          message: "Student created succesfully",
+          Data: Data,
+        });
+      }
     } catch (error) {
       return res.status(400).send(error.message);
     }
   }
+
   async UpdateStudent(req, res) {
     const {
       Students_Name,
@@ -357,24 +380,67 @@ class Admininfo {
     }
   }
 
-  async Addimage(req, res) {
-    console.log(req);
-    const image = req; 
-  console.log(image);
-  const imgUploaded = await CloudinaryUploadImg(image);
-  console.log(imgUploaded);
-  try {
-   
-    return res.status(201).json();
-    console.log(imgUploaded);
-    
-   
+  async AddimageStd(req, res) {
+    // console.log(JSON.parse(req.body));
 
-    
-  } catch (error) {
-    res.status(500).json("Data not Added");
+    const image = req.file.path;
+    const { Student_Id } = req.body;
+
+    try {
+      const imgUploaded = await CloudinaryUploadImg(image);
+
+      if (imgUploaded.http_code === 401) {
+        return res.status(401).json({
+          message: "Error while uploading the images",
+        });
+      }
+
+      const Student = await Students.findOne({ Student_Id: Student_Id });
+
+      if (Student) {
+        Student.Image = imgUploaded;
+        await Student.save();
+      }
+      fs.unlinkSync(`${image}`);
+      return res.status(201).send({
+        message: "Image updated",
+        Data: imgUploaded,
+      });
+    } catch (error) {
+      res.status(500).send("Data not Added");
+    }
   }
- };
+
+  async AddimageEmp(req, res) {
+    // console.log(JSON.parse(req.body));
+
+    const image = req.file.path;
+    const { Employee_Id } = req.body;
+
+    try {
+      const imgUploaded = await CloudinaryUploadImg(image);
+
+      if (imgUploaded.http_code === 401) {
+        return res.status(401).json({
+          message: "Error while uploading the images",
+        });
+      }
+
+      const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
+
+      if (Employee) {
+        Employee.Image = imgUploaded;
+        await Employee.save();
+      }
+      fs.unlinkSync(`${image}`);
+      return res.status(201).send({
+        message: "Image updated",
+        Data: imgUploaded,
+      });
+    } catch (error) {
+      res.status(500).send("Data not Added");
+    }
+  }
 
   // async registerUser(req, res) {
   //   const { firstname, phoneno, passwd } = req.body;

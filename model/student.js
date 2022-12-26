@@ -5,7 +5,7 @@ const StudentsSchema = new mongoose.Schema({
     type: String,
   },
   DOE: {
-    type: String ,
+    type: String,
   },
   Student_Id: {
     type: Number,
@@ -23,8 +23,11 @@ const StudentsSchema = new mongoose.Schema({
     type: String,
   },
   DOJ: {
-    type: String
-  }
+    type: String,
+  },
+  Image: {
+    type: String,
+  },
 });
 const Students = mongoose.model("Students", StudentsSchema);
 export default Students;

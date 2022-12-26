@@ -10,7 +10,7 @@ const EmployeeSchema = new mongoose.Schema({
   Employee_Id: {
     type: String,
   },
-  counselling_Country: {
+  Counselling_Country: {
     type: String,
   },
   Address: {
@@ -20,6 +20,9 @@ const EmployeeSchema = new mongoose.Schema({
     type: String,
   },
   Type: {
+    type: String,
+  },
+  Image: {
     type: String,
   },
 });
