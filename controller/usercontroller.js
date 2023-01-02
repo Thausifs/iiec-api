@@ -204,7 +204,7 @@ class Admininfo {
 
     const image = req.file.path;
     const imgUploaded = await CloudinaryUploadImg(image);
-    console.log(imgUploaded);
+
     try {
       if (imgUploaded.http_code === 401) {
         return res.status(401).json({
