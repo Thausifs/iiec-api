@@ -28,6 +28,7 @@ const StudentsSchema = new mongoose.Schema({
   Image: {
     type: String,
   },
+  
 });
 const Students = mongoose.model("Students", StudentsSchema);
 export default Students;

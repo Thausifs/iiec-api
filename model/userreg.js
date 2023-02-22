@@ -38,6 +38,34 @@ const UserRegschema = new mongoose.Schema({
     type: String,
     default: "In-process",
   },
+  Coun_Country: {
+    type: String,
+    default: null,
+  },
+  Course: {
+    type: String,
+    default: null,
+  },
+  Counsellor: {
+    type: String,
+    default: null,
+  },
+  Coun_Date: {
+    type: String,
+    default: null,
+  },
+  Coun_Time: {
+    type: String,
+    default: null,
+  },
+  Payment_Id: {
+    type: String,
+    default: null,
+  },
+  Order_Id: {
+    type: String,
+    default: null,
+  },
 });
 
 const UserReg = mongoose.model("UserReg", UserRegschema);

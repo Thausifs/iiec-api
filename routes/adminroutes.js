@@ -57,6 +57,10 @@ router.post("/employeelogin", Admininfo.EmployeeLogin);
 router.get("/aplcompleted", Admininfo.ApplicationCompleted);
 router.post("/addimagestd", upload.single("Image"), Admininfo.AddimageStd);
 router.post("/addimageemp", upload.single("Image"), Admininfo.AddimageEmp);
+router.post("/addcounselling", Admininfo.AddCounselling);
+router.get("/aplcompleted", Admininfo.ApplicationCompleted);
+router.post("/razorpayverification", Admininfo.rzpayverification);
+
 // router.post("/addimage", upload.single("image"));
 
 // router.post("/uploadImages", Admininfo.uploadImages);
