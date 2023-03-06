@@ -11,7 +11,8 @@ import mongoose from "mongoose";
 import path from "path";
 import { CloudinaryUploadImg } from "../utils/cloudinary";
 import fs from "fs";
-import { sentmail } from "../utils/nodemailer";
+import { sentmail , setpassword } from "../utils/nodemailer";
+
 // import UserReg from "../model/userreg";
 
 class Admininfo {
@@ -28,7 +29,6 @@ class Admininfo {
       Education_fund_src,
       Study_level,
       Status,
-      
     } = req.body;
     const user = await UserReg.findOne({ Email_id });
     if (user) {
@@ -130,11 +130,12 @@ class Admininfo {
   async CreateEmployee(req, res) {
     const {
       Employee_Name,
+      Employee_Email,
       DOJ,
       Employee_Id,
       Counselling_Country,
-      Address,
-      Password,
+      Location,
+      // Password,
     } = req.body;
     const image = req.file.path;
     const imgUploaded = await CloudinaryUploadImg(image);
@@ -145,16 +146,22 @@ class Admininfo {
           message: "Employee already found with same employee id ",
         });
       } else {
+         var Password = Math.random().toString(36).slice(-8);
         const Data = await Employees.create({
           Employee_Name,
+          Employee_Email, 
           DOJ,
           Employee_Id,
           Counselling_Country,
-          Address,
+          Location,
           Password,
           Type: "admin",
           Image: imgUploaded,
         });
+        const toaddress = Employee_Email;
+       
+        
+        await setpassword(toaddress, Employee_Id, Employee_Name, Password);
         return res.status(201).json({
           message: "Employee created succesfully",
           Data: Data,
@@ -169,20 +176,22 @@ class Admininfo {
   async UpdateEmployee(req, res) {
     const {
       Employee_Name,
+      Employee_Email,
       DOJ,
       Employee_Id,
-      counselling_Country,
-      Address,
-      Password,
+      Counselling_Country,
+      Location,
+      // Password,
     } = req.body;
     const Employee = await Employees.findOne({ Employee_Id });
     try {
       if (Employee) {
         Employee.Employee_Name = Employee_Name;
+         Employee.Employee_Email = Employee_Email;
         Employee.DOJ = DOJ;
-        Employee.counselling_Country = counselling_Country;
-        Employee.Address = Address;
-        Employee.Password = Password;
+        Employee.Counselling_Country = Counselling_Country;
+        Employee.Location = Location;
+        // Employee.Password = Password;
         await Employee.save();
         return res.status(200).send({
           message: "Employee Updated",
@@ -206,8 +215,9 @@ class Admininfo {
       Counsellor,
       Courses,
       Status,
+      Emp_Id,
     } = req.body;
-    // console.log(req.body);
+    console.log(req.body);
 
     const image = req.file.path;
     const imgUploaded = await CloudinaryUploadImg(image);
@@ -233,6 +243,7 @@ class Admininfo {
           Courses,
           Status,
           Image: imgUploaded,
+          Emp_Id: Emp_Id,
         });
         fs.unlinkSync(`${image}`);
         return res.status(200).send({
@@ -254,6 +265,8 @@ class Admininfo {
       Counsellor,
       Courses,
       Status,
+      DOJ,
+      Emp_Id,
     } = req.body;
 
     const Student = await Students.findOne({ Student_Id });
@@ -265,6 +278,8 @@ class Admininfo {
         Student.Counsellor = Counsellor;
         Student.Courses = Courses;
         Student.Status = Status;
+        Student.DOJ = DOJ;
+        Student.Emp_Id = Emp_Id;
         await Student.save();
         return res.status(200).send({
           message: "Student Updated",
@@ -280,10 +295,22 @@ class Admininfo {
   }
   async viewallemployees(req, res) {
     try {
-      const Data = await Employees.find();
+      var data = await Employees.find()
+        .select("Employee_Name")
+        .select("Employee_Email")
+        .select("DOJ")
+        .select("Employee_Id")
+        .select("Counselling_Country")
+        .select("Type")
+        .select("Image")
+      .select("Location")
+     
+    
+     
+     
       return res.status(200).send({
         message: "Employees data fetched",
-        Data: Data,
+        Data: data,
       });
     } catch (error) {
       return res.status(400).send(error.message);
@@ -467,6 +494,7 @@ class Admininfo {
 
       const toaddress = Email_id;
       await sentmail(toaddress, Coun_Date, Coun_Time);
+
       return res.status(200).send({
         message: "user counselling scheduled sucessfully ",
       });
