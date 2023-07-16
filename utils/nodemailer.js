@@ -36,9 +36,9 @@ async function setpassword(toaddress, Employee_Id, Employee_Name, Password) {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+      // host: "smtp.gmail.com",
+      // port: 465,
+      // secure: true,
       auth: {
         user: process.env.gmail_username,
         pass: process.env.gmail_password,
@@ -50,16 +50,19 @@ async function setpassword(toaddress, Employee_Id, Employee_Name, Password) {
       subject: "IIEC SET PASSWORD",
       html: `<p>Hi ${Employee_Name} your employee id ${Employee_Id} has been  added as an employee in IIEC . Please use this generated password ${Password} to login .  </P>`,
     };
-    transporter.sendMail(mailoptions, async (error, info) => {
+   await transporter.sendMail(mailoptions, async (error, info) => {
       if (error) {
         console.log(`🔴 ${error} requires elevated privileges`);
+        return false
       } else {
         // db store data
         console.log(`🟢 Email sent: ${info.response}`);
+        return true
       }
     });
   } catch (error) {
     console.log(`Error from mail ->  ${error.message}`);
+    return false
   }
 }
 

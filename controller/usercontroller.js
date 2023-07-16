@@ -5,13 +5,16 @@ import {
   University,
   Employees,
   Students,
+  sstudent,
+  studentmarks,
 } from "../model";
 // import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import path from "path";
 import { CloudinaryUploadImg } from "../utils/cloudinary";
 import fs from "fs";
-import { sentmail , setpassword } from "../utils/nodemailer";
+import { sentmail, setpassword } from "../utils/nodemailer";
+import { aggregate } from "../utils/mongodbaggregate";
 
 // import UserReg from "../model/userreg";
 
@@ -137,19 +140,24 @@ class Admininfo {
       Location,
       // Password,
     } = req.body;
+    console.log(req.body)
+    console.log(Employee_Id);
     const image = req.file.path;
-    const imgUploaded = await CloudinaryUploadImg(image);
+    
     try {
       const Employee = await Employees.findOne({ Employee_Id: Employee_Id });
+      console.log(Employee);
       if (Employee) {
         return res.status(503).json({
           message: "Employee already found with same employee id ",
-        });
+        }); 
       } else {
-         var Password = Math.random().toString(36).slice(-8);
+        const imgUploaded = await CloudinaryUploadImg(image);
+      
+        var Password = Math.random().toString(36).slice(-8);
         const Data = await Employees.create({
           Employee_Name,
-          Employee_Email, 
+          Employee_Email,
           DOJ,
           Employee_Id,
           Counselling_Country,
@@ -159,9 +167,9 @@ class Admininfo {
           Image: imgUploaded,
         });
         const toaddress = Employee_Email;
-       
-        
-        await setpassword(toaddress, Employee_Id, Employee_Name, Password);
+
+        const mail = await setpassword(toaddress, Employee_Id, Employee_Name, Password);
+        console.log(mail);
         return res.status(201).json({
           message: "Employee created succesfully",
           Data: Data,
@@ -187,7 +195,7 @@ class Admininfo {
     try {
       if (Employee) {
         Employee.Employee_Name = Employee_Name;
-         Employee.Employee_Email = Employee_Email;
+        Employee.Employee_Email = Employee_Email;
         Employee.DOJ = DOJ;
         Employee.Counselling_Country = Counselling_Country;
         Employee.Location = Location;
@@ -217,7 +225,7 @@ class Admininfo {
       Status,
       Emp_Id,
     } = req.body;
-    console.log(req.body);
+      
 
     const image = req.file.path;
     const imgUploaded = await CloudinaryUploadImg(image);
@@ -303,11 +311,31 @@ class Admininfo {
         .select("Counselling_Country")
         .select("Type")
         .select("Image")
-      .select("Location")
-     
-    
-     
-     
+        .select("Location");
+
+      return res.status(200).send({
+        message: "Employees data fetched",
+        Data: data,
+      });
+    } catch (error) {
+      return res.status(400).send(error.message);
+    }
+  }
+
+  async getemployee(req, res) {
+    const { Employee_Id } = req.body;
+    try {
+
+      var data = await Employees.findOne({ Employee_Id: Employee_Id })
+        .select("Employee_Name")
+        .select("Employee_Email")
+        .select("DOJ")
+        .select("Employee_Id")
+        .select("Counselling_Country")
+        .select("Type")
+        .select("Image")
+        .select("Location");
+
       return res.status(200).send({
         message: "Employees data fetched",
         Data: data,
@@ -387,7 +415,7 @@ class Admininfo {
         if (Employee.Password === Password) {
           return res.status(200).send({
             message: "Employee login sucessful",
-            Data: Employee.Type,
+            Data: Employee,
           });
         } else {
           return res.status(201).send({
@@ -536,6 +564,54 @@ class Admininfo {
     } catch (error) {
       return res.json({
         status: "ok",
+      });
+    }
+  }
+  async Aggregate(req, res) {
+    try {
+      const result = await aggregate();
+      return res.status(200).send({
+        message: "cvbcb",
+        response: result,
+      });
+    } catch (error) {
+      return res.status(400).send({
+        message: "error",
+      });
+    }
+  }
+
+  async crttstdd(req, res) {
+    const { Email } = req.body;
+    try {
+      const result = await sstudent.create({
+        email: Email,
+      });
+      return res.status(200).send({
+        message: "",
+        response: result,
+      });
+    } catch (error) {
+      return res.status(400).send({
+        message: "error",
+      });
+    }
+  }
+  async crttstddtwo(req, res) {
+    const { Student_Id, Subject, Marks } = req.body;
+    try {
+      const result = await studentmarks.create({
+        Student_Id,
+        Subject,
+        Marks,
+      });
+      return res.status(200).send({
+        message: "",
+        response: result,
+      });
+    } catch (error) {
+      return res.status(400).send({
+        message: "error",
       });
     }
   }

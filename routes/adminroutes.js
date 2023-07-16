@@ -49,6 +49,7 @@ router.post("/createStudent", upload.single("Image"), Admininfo.CreateStudent);
 router.post("/updateStudent", Admininfo.UpdateStudent);
 // router.post("/updateStudentimg", Admininfo.Updateimagestd);
 router.get("/viewallemployees", Admininfo.viewallemployees);
+router.get("/getemployee", Admininfo.getemployee);
 router.get("/viewallstudents", Admininfo.viewallstudents);
 router.post("/deletestudent", Admininfo.DeleteStudent);
 router.post("/deleteemployee", Admininfo.DeleteEmployee);
@@ -60,6 +61,9 @@ router.post("/addimageemp", upload.single("Image"), Admininfo.AddimageEmp);
 router.post("/addcounselling", Admininfo.AddCounselling);
 router.get("/aplcompleted", Admininfo.ApplicationCompleted);
 router.post("/razorpayverification", Admininfo.rzpayverification);
+router.get("/aggreagte", Admininfo.Aggregate);
+router.post("/crtstd", Admininfo.crttstdd);
+router.post("/crtstdtwo", Admininfo.crttstddtwo);
 
 // router.post("/addimage", upload.single("image"));
 
