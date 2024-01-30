@@ -26,7 +26,7 @@ const fileFilter = (req, file, cb) => {
       "Only JPEG OR PNG images and should be lesser than 2mb ";
   }
 };
-const upload = multer({
+const upload = multer({ 
   storage: Storage,
   //   limits: {
   //     fileSize: 1024 * 1024 * 2, // 2mb upload

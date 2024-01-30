@@ -224,9 +224,10 @@ class Admininfo {
       Courses,
       Status,
       Emp_Id,
+      DOJ
     } = req.body;
       
-
+   console.log(req.body);
     const image = req.file.path;
     const imgUploaded = await CloudinaryUploadImg(image);
 
@@ -252,6 +253,7 @@ class Admininfo {
           Status,
           Image: imgUploaded,
           Emp_Id: Emp_Id,
+          DOJ : DOJ
         });
         fs.unlinkSync(`${image}`);
         return res.status(200).send({
